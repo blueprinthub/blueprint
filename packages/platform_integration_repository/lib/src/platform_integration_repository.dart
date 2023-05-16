@@ -1,6 +1,7 @@
 import 'dart:async';
+import 'dart:developer';
 
-import 'package:platform_integration_repository/src/data_sources/platform_integration_storage.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:platform_integration_repository/src/entities/entities.dart';
 import 'package:platform_integration_repository/src/ui/ui.dart';
 
@@ -30,10 +31,7 @@ abstract class PlatformIntegrationRepository<PlatformType extends Platform,
   /// Creates a new [PlatformIntegrationRepository] instance.
   PlatformIntegrationRepository({
     required this.platform,
-    required PlatformIntegrationStorage<PlatformType, IntegrationType> storage,
-  }) : _storage = storage;
-
-  final PlatformIntegrationStorage<PlatformType, IntegrationType> _storage;
+  });
 
   /// The platform that represents the repository
   final PlatformType platform;
@@ -53,16 +51,33 @@ abstract class PlatformIntegrationRepository<PlatformType extends Platform,
 
   /// Returns a stream of all integrations from all sources. This stream reacts
   /// to changes in the integrations, like additions or removals.
-  Stream<List<IntegrationType>> getIntegrations() =>
-      _storage.integrationsStream;
+  Stream<List<IntegrationType>> getIntegrations() {
+    // TODO: implement this fethchig from firebase
+    return Stream.value([]);
+  }
 
   /// Creates a new [integration] in the repository.
-  Future<void> createIntegration(IntegrationType integration) =>
-      _storage.storeIntegrations([integration]);
+  Future<void> createIntegration(IntegrationType integration) async {
+    try {
+      final callable =
+          FirebaseFunctions.instance.httpsCallable('authenticators-connect');
+
+      final integrationParams = integration.toConnectApiParams();
+      await callable<void>(integrationParams);
+    } on FirebaseFunctionsException catch (e) {
+      // TODO: catch the correct exceptions and throw them
+      log('Error calling function authentications-connect: ${e.code} '
+          '${e.message}: ${e.details} ');
+
+      rethrow;
+    }
+  }
 
   /// Deletes an [integration] from the repository.
-  Future<void> deleteIntegration(IntegrationType integration) =>
-      _storage.deleteIntegration(integration);
+  Future<void> deleteIntegration(IntegrationType integration) {
+    // TODO: comunicate with firebase to delete the integration
+    return Future.value();
+  }
 
   /// Returns a list of PlatformIntegrationTile that will be used to display
   /// all the possible integrations in the ui and how to integrate them.
