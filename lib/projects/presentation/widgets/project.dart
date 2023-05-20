@@ -1,11 +1,11 @@
+import 'package:blueprint/core/utils/color/hex_color_extension.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:integrations_repository/integrations_repository.dart';
-import 'package:blueprint/core/utils/color/hex_color_extension.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProjectCard extends StatelessWidget {
-  const ProjectCard({super.key, required this.project});
+  const ProjectCard({required this.project, super.key});
   final Project project;
 
   @override
@@ -67,12 +67,12 @@ class ProjectCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     CachedNetworkImage(
-                      imageUrl: project.integration.platform.iconUrl,
+                      imageUrl: project.platform.iconUrl,
                       height: 16,
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      project.integration.platform.displayName,
+                      project.platform.displayName,
                       style: const TextStyle(
                         fontSize: 16,
                       ),
@@ -90,8 +90,7 @@ class ProjectCard extends StatelessWidget {
               child: FilledButton.icon(
                 onPressed: () => launchUrl(project.platformURL),
                 icon: const Icon(Icons.link),
-                label:
-                    Text('View in ${project.integration.platform.displayName}'),
+                label: Text('View in ${project.platform.displayName}'),
               ),
             ),
           )

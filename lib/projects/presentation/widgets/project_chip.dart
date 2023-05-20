@@ -5,8 +5,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 class ProjectChip extends StatelessWidget {
   const ProjectChip({
-    super.key,
     required this.project,
+    super.key,
   });
 
   final Project project;
@@ -20,7 +20,7 @@ class ProjectChip extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             CachedNetworkImage(
-              imageUrl: project.integration.platform.iconUrl,
+              imageUrl: project.platform.iconUrl,
               height: 16,
             ),
             const SizedBox(width: 8),

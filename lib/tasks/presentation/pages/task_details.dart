@@ -1,14 +1,14 @@
+import 'package:blueprint/blueprint/state_management/todays_blueprint/todays_blueprint_cubit.dart';
+import 'package:blueprint/projects/presentation/widgets/project_chip.dart';
+import 'package:blueprint/tasks/presentation/widgets/priority_widget.dart';
+import 'package:blueprint/tasks/presentation/widgets/status_chip.dart';
+import 'package:blueprint/tasks/presentation/widgets/user_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:integrations_repository/integrations_repository.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:markdown/markdown.dart' as md;
-import 'package:blueprint/blueprint/state_management/todays_blueprint/todays_blueprint_cubit.dart';
-import 'package:blueprint/projects/presentation/widgets/project_chip.dart';
-import 'package:blueprint/tasks/presentation/widgets/priority_widget.dart';
-import 'package:blueprint/tasks/presentation/widgets/status_chip.dart';
-import 'package:blueprint/tasks/presentation/widgets/user_tile.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class TaskDetails extends StatelessWidget {
@@ -95,7 +95,7 @@ class TaskDetails extends StatelessWidget {
                       onPressed: () => launchUrl(task.taskURL),
                       icon: const Icon(Icons.link),
                       label: Text(
-                        'View in ${task.project.integration.platform.displayName}',
+                        'View in ${task.project.platform.displayName}',
                       ),
                     )
                   ],

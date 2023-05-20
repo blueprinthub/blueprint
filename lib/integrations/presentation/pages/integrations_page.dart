@@ -4,7 +4,6 @@ import 'package:blueprint/integrations/state_management/cubit/integrations_cubit
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:integrations_repository/integrations_repository.dart';
-import 'package:jira_repository/jira_repository.dart';
 
 @RoutePage()
 class IntegrationsPage extends StatefulWidget {
@@ -156,44 +155,11 @@ class IntegrationsDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (integration is JiraIntegration) {
-      return JiraIntegrationDetails(
-        integration: integration as JiraIntegration,
-      );
-    }
     return Column(
       children: [
         Text(
           integration.platform.displayName,
           style: Theme.of(context).textTheme.titleLarge,
-        ),
-      ],
-    );
-  }
-}
-
-class JiraIntegrationDetails extends StatelessWidget {
-  const JiraIntegrationDetails({required this.integration, super.key});
-  final JiraIntegration integration;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          integration.platform.displayName,
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        const SizedBox(height: 4),
-        Text(
-          integration.url,
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-        const SizedBox(height: 4),
-        Text(
-          integration.user,
-          style: Theme.of(context).textTheme.bodySmall,
         ),
       ],
     );

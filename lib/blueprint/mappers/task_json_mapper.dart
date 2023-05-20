@@ -1,6 +1,4 @@
-import 'package:github_repository/github_repository.dart';
 import 'package:integrations_repository/integrations_repository.dart';
-import 'package:jira_repository/jira_repository.dart';
 
 abstract class TaskJsonMapper {
   static Map<String, dynamic> toJson(Task task) {
@@ -43,24 +41,11 @@ abstract class TaskJsonMapper {
     };
   }
 
-  static Map<String, dynamic> toJsonIntegration(Integration integration) {
-    if (integration is GitHubIntegration) {
-      return integration.toJson();
-    } else if (integration is JiraIntegration) {
-      return integration.toJson();
-    } else {
-      throw UnimplementedError(
-        'Unknown integration type: ${integration.runtimeType}',
-      );
-    }
-  }
-
   static Map<String, dynamic> toJsonProject(Project project) {
     return {
       'id': project.id,
       'platformId': project.platformId,
       'platformURL': project.platformURL.toString(),
-      'integration': toJsonIntegration(project.integration),
       'name': project.name,
       'description': project.description,
       'iconURL': project.iconUrl,
@@ -116,8 +101,7 @@ abstract class TaskJsonMapper {
         id: json['id'] as String,
         platformId: json['platformId'] as String,
         platformURL: Uri.parse(json['platformURL'] as String),
-        integration:
-            fromJsonIntegration(json['integration'] as Map<String, dynamic>),
+        platform: fromJsonPlatform(json['platform'] as Map<String, dynamic>),
         name: json['name'] as String,
         description: json['description'] as String,
         colorHex: json['colorHex'] as String,
@@ -126,27 +110,8 @@ abstract class TaskJsonMapper {
         slug: json['slug'] as String?,
       );
 
-  static Integration fromJsonIntegration(Map<String, dynamic> json) {
-    final platformId = json['platformId'] as String;
-    final platform = fromJsonPlatform(platformId);
-
-    if (platform is JiraPlatform) {
-      return JiraIntegration.fromJson(json);
-    } else if (platform is GitHubPlatform) {
-      return GitHubIntegration.fromJson(json);
-    } else {
-      throw Exception('Unknown platform id: $platformId');
-    }
-  }
-
-  static Platform fromJsonPlatform(String platformId) {
-    switch (platformId) {
-      case 'github':
-        return githubPlatform;
-      case 'jira':
-        return jiraPlatform;
-      default:
-        throw Exception('Unknown platform id: $platformId');
-    }
+  static Platform fromJsonPlatform(Map<String, dynamic> platform) {
+    // TODO: implement this
+    throw UnimplementedError();
   }
 }
