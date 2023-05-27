@@ -19,3 +19,23 @@ abstract class Integration extends Equatable {
   /// implemented by the specific integration.
   Map<String, dynamic> toConnectApiParams();
 }
+
+class OAuth2Integration extends Integration {
+  OAuth2Integration(super.platform, this.token)
+      : assert(
+          platform.authentication is OAuth2,
+          'Authentication must be OAuth2',
+        );
+  final String token;
+
+  @override
+  List<Object?> get props => [platform];
+
+  @override
+  Map<String, dynamic> toConnectApiParams() => {
+        'code': token,
+        //TODO: change this on backend side since displayName should not be used
+        // as a key.
+        'platform': platform.displayName,
+      };
+}

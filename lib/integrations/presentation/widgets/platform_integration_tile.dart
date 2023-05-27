@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:platform_integration_repository/src/entities/entities.dart';
+import 'package:flutter_web_auth/flutter_web_auth.dart';
+import 'package:integrations_repository/integrations_repository.dart';
 
 /// {@template platform_integration_tile}
 /// A tile that shows the information of a platform integration.
@@ -30,11 +31,11 @@ abstract class PlatformIntegrationTile<PlatformType extends Platform,
   final String description;
 
   /// Called when the integration is created.
-  final FutureOr<void> Function(IntegrationType) onIntegrationCreated;
+  final FutureOr<void> Function(IntegrationType integration)
+      onIntegrationCreated;
 
   /// Shows the integration creation modal.
   Future<IntegrationType?> showCreateIntegrationModal(BuildContext context);
-
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -64,5 +65,38 @@ abstract class PlatformIntegrationTile<PlatformType extends Platform,
         child: Image.network(platform.iconUrl),
       ),
     );
+  }
+}
+
+class OAuth2PlatformTile<PlatformType extends Platform>
+    extends PlatformIntegrationTile<PlatformType, OAuth2Integration> {
+  OAuth2PlatformTile({
+    required super.platform,
+    required super.onIntegrationCreated,
+    required super.integrationName,
+    required super.description,
+    super.key,
+  }) : assert(platform.authentication is OAuth2, 'Platform must be OAuth2');
+
+  @override
+  Future<OAuth2Integration?> showCreateIntegrationModal(
+    BuildContext context,
+  ) async {
+    final authentication = platform.authentication as OAuth2;
+    print('Authenticating with ${authentication.url}');
+
+    final result = await FlutterWebAuth.authenticate(
+      url: authentication.url,
+      callbackUrlScheme: authentication.redirectScheme,
+    );
+
+    final uri = Uri.parse(result);
+    final code = uri.queryParameters['code'];
+    if (code == null) {
+      throw Exception('No code returned');
+    }
+
+    final integration = OAuth2Integration(platform, code);
+    return integration;
   }
 }
